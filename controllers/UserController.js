@@ -1,15 +1,9 @@
-import { validationResult } from 'express-validator';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import UserModel from '../models/User.js';
 
 export const register = async (req, res) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json(errors.array());
-    } // Если ошибки не пустые (они есть), тогда мы возвращаем ответ (400 - неверный запрос). Вернутся все ошибки, которые не провалидировались
-
     const password = req.body.password;
     const salt = await bcrypt.genSalt(10); // Алгоритм шифрования нашего пароля
     const hash = await bcrypt.hash(password, salt); // Зашифрованный пароль
@@ -17,7 +11,7 @@ export const register = async (req, res) => {
     const doc = new UserModel({
       email: req.body.email,
       fullName: req.body.fullName,
-      avatarUel: req.body.avatarUel,
+      avatarUrl: req.body.avatarUrl,
       passwordHash: hash,
     });
 
