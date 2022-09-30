@@ -24,10 +24,13 @@ const PostSchema = new mongoose.Schema(
       ref: 'User',
       required: true,
     },
+    date: {
+      type: Date,
+    },
     imageUrl: String,
   },
   {
-    timetamps: true,
+    timestamps: true,
   },
 );
 

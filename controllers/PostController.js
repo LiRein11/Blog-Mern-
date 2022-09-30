@@ -2,12 +2,12 @@ import PostModel from '../models/Post.js';
 
 export const getLastTags = async (req, res) => {
   try {
-    const posts = await PostModel.find().limit(5).exec(); // populate.exec нужно для того, чтобы получить связь с пользователем (чтобы был не просто его id, а все его данные)
+    const posts = await PostModel.find().limit(10).exec();
 
     const tags = posts
       .map((obj) => obj.tags)
       .flat()
-      .slice(0, 5);
+      .slice(0, 10);
 
     res.json(tags);
   } catch (err) {
@@ -23,6 +23,85 @@ export const getAll = async (req, res) => {
     const posts = await PostModel.find().populate('user').exec(); // populate.exec нужно для того, чтобы получить связь с пользователем (чтобы был не просто его id, а все его данные)
 
     res.json(posts);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: 'Не удалось получить статьи',
+    });
+  }
+};
+
+export const getPostsByTag = async (req, res) => {
+  try {
+    // const posts = await PostModel.find().populate('user').exec(); // populate.exec нужно для того, чтобы получить связь с пользователем (чтобы был не просто его id, а все его данные)
+
+    // const tagName = req.params.tags;
+    const tagName = req.params.tag;
+
+    PostModel.find(
+      {
+        tags: tagName,
+      },
+      (err, doc) => {
+        if (err) {
+          console.log(err);
+          return res.status(500).json({
+            message: 'Не удалось вернуть статью',
+          });
+        }
+
+        if (!doc) {
+          return res.status(404).json({
+            message: 'Статья не найдена',
+          });
+        }
+
+        // doc.map((obj, i) => {
+        //  { $inc: {obj.viewsCount : 1}};
+        // });
+        res.json(doc);
+      },
+    ).populate('user');
+
+    // const postsByTag = posts.map((obj) => {
+    //   if (obj.tags.includes('timestamps')) {
+    //     return obj;
+    //   }
+    // });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: 'Не удалось получить статьи',
+    });
+  }
+};
+
+export const getAllByDate = async (req, res) => {
+  try {
+    const posts = await PostModel.find().populate('user').exec(); // populate.exec нужно для того, чтобы получить связь с пользователем (чтобы был не просто его id, а все его данные)
+
+    const postsDate = posts.sort((a, b) => {
+      return b.createdAt - a.createdAt;
+    });
+
+    res.json(postsDate);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: 'Не удалось получить статьи',
+    });
+  }
+};
+
+export const getAllByViews = async (req, res) => {
+  try {
+    const posts = await PostModel.find().populate('user').exec(); // populate.exec нужно для того, чтобы получить связь с пользователем (чтобы был не просто его id, а все его данные)
+
+    const postsViews = posts.sort((a, b) => {
+      return b.viewsCount - a.viewsCount;
+    });
+
+    res.json(postsViews);
   } catch (err) {
     console.log(err);
     res.status(500).json({
@@ -61,7 +140,7 @@ export const getOne = async (req, res) => {
 
         res.json(doc);
       },
-    ); // Это всё делается потому что статья может вернутся только если есть просмотр, и поэтому мы перед возвратом добавляем просмотр и потом возвращаем статью
+    ).populate('user'); // Это всё делается потому что статья может вернутся только если есть просмотр, и поэтому мы перед возвратом добавляем просмотр и потом возвращаем статью
   } catch (err) {
     console.log(err);
     res.status(500).json({
@@ -111,7 +190,7 @@ export const create = async (req, res) => {
       title: req.body.title,
       text: req.body.text,
       imageUrl: req.body.imageUrl,
-      tags: req.body.tags,
+      tags: req.body.tags.split(','),
       user: req.userId,
     });
 
@@ -138,7 +217,7 @@ export const update = async (req, res) => {
         title: req.body.title,
         text: req.body.text,
         imageUrl: req.body.imageUrl,
-        tags: req.body.tags,
+        tags: req.body.tags.split(','),
         user: req.userId,
       },
     );
