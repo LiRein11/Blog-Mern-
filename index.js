@@ -54,10 +54,11 @@ app.get('/tags/:tag', PostController.getPostsByTag);
 app.get('/posts', PostController.getAll);
 app.get('/posts/tags', PostController.getLastTags);
 app.get('/posts/:id', PostController.getOne);
-app.get('/posts/:id/comments', CommentController.getAllComments);
+app.get('/posts/comments/comm/:id', CommentController.getCommentsByPost);
+app.get('/posts/comments/comm', CommentController.getAllComments);
 app.post('/posts', checkAuth, postCreateValidation, handleValidationErrors, PostController.create);
 app.post(
-  '/posts/:id',
+  '/posts/:id/comment',
   checkAuth,
   commentCreateValidation,
   handleValidationErrors,
@@ -71,6 +72,13 @@ app.patch(
   handleValidationErrors,
   PostController.update,
 );
+// app.patch(
+//   '/posts/:id/comments',
+//   checkAuth,
+//   commentCreateValidation,
+//   handleValidationErrors,
+//   PostController.createComment,
+// );
 
 app.listen(4444, (err) => {
   if (err) {

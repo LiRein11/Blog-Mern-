@@ -5,14 +5,18 @@ const CommentSchema = new mongoose.Schema(
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
     },
     date: {
       type: Date,
+      default: Date.now,
     },
-    comment: {
+    text: {
       type: String,
       required: true,
+    },
+    post: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Post',
     },
   },
   {

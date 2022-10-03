@@ -1,3 +1,4 @@
+import Comment from '../models/Comment.js';
 import PostModel from '../models/Post.js';
 
 export const getLastTags = async (req, res) => {
@@ -68,6 +69,72 @@ export const getPostsByTag = async (req, res) => {
     //     return obj;
     //   }
     // });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: 'Не удалось получить статьи',
+    });
+  }
+};
+
+export const getCommentsByPost = async (req, res) => {
+  // try {
+  //   // const posts = await PostModel.find().populate('user').exec(); // populate.exec нужно для того, чтобы получить связь с пользователем (чтобы был не просто его id, а все его данные)
+
+  //   // const tagName = req.params.tags;
+  //   const id = req.params.id;
+
+  //   Comment.find(
+  //     {
+  //       post: id,
+  //     },
+  //     (err, doc) => {
+  //       if (err) {
+  //         console.log(err);
+  //         return res.status(500).json({
+  //           message: 'Не удалось вернуть статью',
+  //         });
+  //       }
+
+  //       if (!doc) {
+  //         return res.status(404).json({
+  //           message: 'Статья не найдена',
+  //         });
+  //       }
+
+  //       // doc.map((obj, i) => {
+  //       //  { $inc: {obj.viewsCount : 1}};
+  //       // });
+  //       res.json(doc);
+  //     },
+  //   );
+
+  //   // const postsByTag = posts.map((obj) => {
+  //   //   if (obj.tags.includes('timestamps')) {
+  //   //     return obj;
+  //   //   }
+  //   // });
+  // } catch (err) {
+  //   console.log(err);
+  //   res.status(500).json({
+  //     message: 'Не удалось получить статьи',
+  //   });
+  // }
+
+  try {
+    // const posts = await PostModel.find().populate('user').exec();
+
+    const id = req.params.id;
+
+    const post = await PostModel.find().populate('comments');
+
+    const comments = await Comment.find(id);
+
+    if (id === comments.post){
+      res.json(comments)
+    }
+
+    // res.json(post);
   } catch (err) {
     console.log(err);
     res.status(500).json({
@@ -149,11 +216,35 @@ export const getOne = async (req, res) => {
   }
 };
 
+// export const createComment = async (req, res) => {
+//   try {
+//     const postId = req.params.id;
+
+//     PostModel.findOneAndUpdate(
+//       {
+//         _id: postId,
+//       },
+//       {
+//         comments: req.body.comments,
+//       },
+//     );
+
+//     res.json({
+//       success: true,
+//     });
+//   } catch (err) {
+//     console.log(err);
+//     res.status(500).json({
+//       message: 'Не удалось обновить статью',
+//     });
+//   }
+// };
+
 export const remove = async (req, res) => {
   try {
     const postId = req.params.id;
 
-    PostModel.findOneAndDelete(
+    await PostModel.updateOne(
       {
         _id: postId,
       },

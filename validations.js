@@ -20,5 +20,5 @@ export const postCreateValidation = [
 ];
 
 export const commentCreateValidation = [
-  body('comment', 'Введите комментарий статьи').isLength({ min: 3 }).isString(),
+  body('text', 'Введите комментарий статьи').isLength({ min: 3 }).isString(),
 ];
