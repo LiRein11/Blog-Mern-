@@ -54,8 +54,8 @@ app.get('/tags/:tag', PostController.getPostsByTag);
 app.get('/posts', PostController.getAll);
 app.get('/posts/tags', PostController.getLastTags);
 app.get('/posts/:id', PostController.getOne);
-app.get('/posts/comments/comm/:id', CommentController.getCommentsByPost);
-app.get('/posts/comments/comm', CommentController.getAllComments);
+app.get('/posts/comments/commbypost/:id', CommentController.getCommentsByPost);
+app.get('/posts/comments/allcomments', CommentController.getAllComments);
 app.post('/posts', checkAuth, postCreateValidation, handleValidationErrors, PostController.create);
 app.post(
   '/posts/:id/comment',

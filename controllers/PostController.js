@@ -77,71 +77,24 @@ export const getPostsByTag = async (req, res) => {
   }
 };
 
-export const getCommentsByPost = async (req, res) => {
-  // try {
-  //   // const posts = await PostModel.find().populate('user').exec(); // populate.exec нужно для того, чтобы получить связь с пользователем (чтобы был не просто его id, а все его данные)
+// export const getCommentsByPost = async (req, res) => {
+//   try {
+//     // const posts = await PostModel.find().populate('user').exec();
 
-  //   // const tagName = req.params.tags;
-  //   const id = req.params.id;
+//     const id = req.params.id;
 
-  //   Comment.find(
-  //     {
-  //       post: id,
-  //     },
-  //     (err, doc) => {
-  //       if (err) {
-  //         console.log(err);
-  //         return res.status(500).json({
-  //           message: 'Не удалось вернуть статью',
-  //         });
-  //       }
+//     // const post = PostModel.find({id}).populate('comments')
 
-  //       if (!doc) {
-  //         return res.status(404).json({
-  //           message: 'Статья не найдена',
-  //         });
-  //       }
+//     const comments = await Comment.find({ post: id });
 
-  //       // doc.map((obj, i) => {
-  //       //  { $inc: {obj.viewsCount : 1}};
-  //       // });
-  //       res.json(doc);
-  //     },
-  //   );
-
-  //   // const postsByTag = posts.map((obj) => {
-  //   //   if (obj.tags.includes('timestamps')) {
-  //   //     return obj;
-  //   //   }
-  //   // });
-  // } catch (err) {
-  //   console.log(err);
-  //   res.status(500).json({
-  //     message: 'Не удалось получить статьи',
-  //   });
-  // }
-
-  try {
-    // const posts = await PostModel.find().populate('user').exec();
-
-    const id = req.params.id;
-
-    const post = await PostModel.find().populate('comments');
-
-    const comments = await Comment.find(id);
-
-    if (id === comments.post){
-      res.json(comments)
-    }
-
-    // res.json(post);
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({
-      message: 'Не удалось получить статьи',
-    });
-  }
-};
+//     res.json(comments);
+//   } catch (err) {
+//     console.log(err);
+//     res.status(500).json({
+//       message: 'Не удалось получить статьи',
+//     });
+//   }
+// };
 
 export const getAllByDate = async (req, res) => {
   try {

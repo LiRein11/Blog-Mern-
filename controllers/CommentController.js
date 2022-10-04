@@ -55,9 +55,9 @@ export const getCommentsByPost = async (req, res) => {
 
     const id = req.params.id;
 
-    // const post = await PostModel.findById(id).populate('comments');
+    // const post = PostModel.find({id}).populate('comments')
 
-    const comments = await CommentModel.findById(id).populate('user');
+    const comments = await CommentModel.find({ post: id }).populate('user');
 
     res.json(comments);
   } catch (err) {
@@ -72,7 +72,7 @@ export const getAllComments = async (req, res) => {
   try {
     const comments = await CommentModel.find().populate('user');
 
-    const ab = comments.map((obj) => obj.post);
+    // const ab = comments.map((obj) => obj.post);
 
     res.json(comments);
   } catch (err) {
