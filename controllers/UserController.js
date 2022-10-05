@@ -39,8 +39,7 @@ export const register = async (req, res) => {
       message: 'Не удалось зарегистрироваться',
     });
   }
-  
-};// Если придет запрос на auth/register, то мы проверим, есть ли в этом пути то, что мы хотим (второй аргумент это нам позволяет), если есть, то только в этом случае выполняй третью часть(сам запрос (функцию))
+}; // Если придет запрос на auth/register, то мы проверим, есть ли в этом пути то, что мы хотим (второй аргумент это нам позволяет), если есть, то только в этом случае выполняй третью часть(сам запрос (функцию))
 
 export const login = async (req, res) => {
   try {
@@ -100,6 +99,37 @@ export const getMe = async (req, res) => {
     console.log(err);
     res.status(500).json({
       message: 'Нет доступа',
+    });
+  }
+};
+
+export const updateUser = async (req, res) => {
+  try {
+    const user = req.userId;
+
+    if (!user) {
+      return res.status(404).json({
+        message: 'Пользователь не найден',
+      });
+    }
+
+    await UserModel.findOneAndUpdate(
+      {
+        user,
+      },
+      {
+        avatarUrl: req.body.avatarUrl,  
+        fullName: req.body.fullName,
+        email: req.body.email,
+      },
+    );
+    res.json({
+      success: true,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: 'Не удалось обновить пользователя',
     });
   }
 };
