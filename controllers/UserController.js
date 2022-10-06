@@ -105,17 +105,12 @@ export const getMe = async (req, res) => {
 
 export const updateUser = async (req, res) => {
   try {
-    const user = req.userId;
 
-    if (!user) {
-      return res.status(404).json({
-        message: 'Пользователь не найден',
-      });
-    }
+    const userId = req.params.id
 
-    await UserModel.findOneAndUpdate(
+    await UserModel.updateOne(
       {
-        user,
+        _id: userId,
       },
       {
         avatarUrl: req.body.avatarUrl,  
